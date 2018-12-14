@@ -59,6 +59,7 @@ function managerStart() {
 function productsForSale() {
 	connection.query("SELECT * FROM products", function(err, res) {
 		if (err) return err;
+	console.log("\n")
 	console.log("--------------------------------------")
     console.log("Item ID, Product Name, Price, Stock")
     console.log("--------------------------------------")
@@ -66,13 +67,14 @@ function productsForSale() {
 		  console.log(res[i].item_id + " | " + res[i].product_name
         + " | " + res[i].price + " | " + res[i].stock_quantity);
 		}
-		connection.end();
+	managerStart();
 	});
 }
 
 function lowInventory() {
 	connection.query("SELECT * FROM products", function(err, res) {
 		if (err) return err;
+	console.log("\n")
 	console.log("--------------------------------------")
     console.log("Low Inventory Items")
     console.log("--------------------------------------")
@@ -84,75 +86,74 @@ function lowInventory() {
 		       	+ " | " + res[i].price + " | " + res[i].stock_quantity);
 			}
 		}
-		connection.end();
+	managerStart();
 	});
 }
 
 function addInventory() {
 	connection.query("SELECT * FROM products", function(err, res) {
 		inquirer
-		  .prompt([
-		    {
-		      name: "updateChoices",
-		      type: "rawlist",
-		      choices: function() {
-		                  var choiceArray = [];
-		                  for (var i = 0; i < res.length; i++) {
-		                    choiceArray.push(res[i].product_name);
-		                  }
-		                  return choiceArray;
-		      },
-		       message: "Hey Manager, What item would you like to update?"
-		    },
-		    {
-		      name: "updateStock",
-		      type: "input",
-		      message: "Hey Manager, How much stock do you want to add?",
-		      validate: function(value) {
-		      if (isNaN(value) === false) {
-		        return true;
-		      }
-		      return false;
-		      }
-		    }
-		  ])
-		  .then(function(answer) {
-		  	var chosenItem;
-		  	for (var i = 0; i < res.length; i++) {
-		  	  if (res[i].product_name === answer.updateChoices) {
-		  	    chosenItem = res[i];
-		  	  }
-		  	};
-
-		  	var totalStock = chosenItem.stock_quantity + parseInt(answer.updateStock)
-		  	updateProduct(answer.updateChoices, totalStock)
-		  }
+		  	.prompt([
+		  	  	{
+		  	    	name: "updateChoices",
+		  	    	type: "rawlist",
+		  	    	choices: function() {
+		  	                var choiceArray = [];
+		  	                for (var i = 0; i < res.length; i++) {
+		  	                  choiceArray.push(res[i].product_name);
+		  	                }
+		  	                return choiceArray;
+		  	    	},
+		  	     	message: "Hey Manager, What item would you like to update?"
+		  	  	},
+		  	  	{
+		  	    	name: "updateStock",
+		  	    	type: "input",
+		  	    	message: "Hey Manager, How much stock do you want to add?",
+		  	    	validate: function(value) {
+		  	    	if (isNaN(value) === false) {
+		  	      		return true;
+		  	    	}
+		  	    	return false;
+		  	    	}
+		  	  	}
+		  	])
+		  	.then(function(answer) {
+		  		var chosenItem;
+		  		for (var i = 0; i < res.length; i++) {
+		  		  	if (res[i].product_name === answer.updateChoices) {
+		  		    	chosenItem = res[i];
+		  		  	}
+		  		};
+		  		var totalStock = chosenItem.stock_quantity + parseInt(answer.updateStock)
+		  		updateProduct(answer.updateChoices, totalStock)
+		  	}
 		)
+	managerStart();
 	})
 };
 
 function updateProduct(name, quantity) {
-  	var query = connection.query(
-      "UPDATE products SET ? WHERE ?",
-      [
-        {
-          stock_quantity: quantity
-        },
-        {
-          product_name: name
+  	var query = connection.query("UPDATE products SET ? WHERE ?",
+        [
+            {
+                stock_quantity: quantity
+          	},
+          	{
+            	product_name: name
+          	}
+        ],
+        function(err, res) {
+        	if (err) throw err;
+          	console.log(res.affectedRows + " products updated!\n");
         }
-      ],
-      function(err, res) {
-      	if (err) throw err;
-        	console.log(res.affectedRows + " products updated!\n");
-      }
     );
     console.log(query.sql);
 }
 
 function addProducts() {
 	inquirer
-		  .prompt([
+		.prompt([
 		    {
 		      name: "product_name",
 		      type: "input",
@@ -186,10 +187,10 @@ function addProducts() {
 		      }
 		    },
 
-		  ])
-		  .then(function(answer) {
-		  	  console.log("Inserting a new product...\n");
-		  	  var query = connection.query(
+		])
+		.then(function(answer) {
+		  	console.log("Inserting a new product...\n");
+		  	var query = connection.query(
 		  	    "INSERT INTO products SET ?",
 		  	    {
 		  	      product_name: answer.product_name,
@@ -201,10 +202,9 @@ function addProducts() {
 		  	    	if (err) throw err
 		  	      	console.log(res.affectedRows + " product inserted!\n");
 		  	    }
-		  	  );
-
-		  	  // logs the actual query being run
-		  	  console.log(query.sql);
-      }
+		  	);
+		  	console.log(query.sql);
+		  	managerStart();
+      	}
     )
 }
