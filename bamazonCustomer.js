@@ -22,6 +22,13 @@ function start() {
   connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
     // console.log(res);
+    console.log("--------------------------------------")
+    console.log("Item ID, Product Name, Price, Stock")
+    console.log("--------------------------------------")
+    for (var i = 0; i < res.length; i++){
+           console.log(res[i].item_id + " | " + res[i].product_name
+            + " | " + res[i].price + " | " + res[i].stock_quantity);
+    }
     inquirer
       .prompt([
         {
@@ -76,10 +83,10 @@ function updateStock(item, answer) {
       ],
       function(error) {
         if (error) throw error;
-        console.log("Nice! You've purchased " + item.stock_quantity + " " + item.product_name);
+        console.log("Nice! You've purchased " + answer.unitchoice + " " + item.product_name);
         connection.end();
       }
-    );
+    )
   } else {
     console.log("Oh no, you got's no more!")
   }
