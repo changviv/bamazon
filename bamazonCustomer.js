@@ -71,6 +71,7 @@ function start() {
 function updateStock(item, answer) {
   if (parseInt(answer.unitchoice) <= item.stock_quantity ) {
     var new_stock = (item.stock_quantity - parseInt(answer.unitchoice))
+    var cost = (parseInt(item.price) * parseInt(answer.unitchoice))
     connection.query(
       "UPDATE products SET ? WHERE ?",
       [
@@ -84,11 +85,11 @@ function updateStock(item, answer) {
       function(error) {
         if (error) throw error;
         console.log("Nice! You've purchased " + answer.unitchoice + " " + item.product_name);
+        console.log("Your total cost is", cost)
         connection.end();
       }
     )
   } else {
     console.log("Oh no, you got's no more!")
   }
-  start();
 }
