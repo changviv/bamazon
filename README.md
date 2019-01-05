@@ -30,6 +30,8 @@
    <img width="545" alt="screen shot 2019-01-05 at 1 40 15 pm" src="https://user-images.githubusercontent.com/20783131/50729519-35a96480-10f0-11e9-9495-2120ef7860b4.png">
    
    or it will tell you that there isn't anymore 
+   <img width="587" alt="screen shot 2019-01-05 at 1 39 53 pm" src="https://user-images.githubusercontent.com/20783131/50729543-a2bcfa00-10f0-11e9-82c7-8d5fb849cc68.png">
+
 
 
 7. Once the customer has placed the order, your application should check if your store has enough of the product to meet the customer's request.
